@@ -1,0 +1,96 @@
+:root {
+	--bg: #fbf8f1;
+	--surface: #ffffff;
+	--text: #1f2421;
+	--muted: #6b7470;
+	--border: #e4ded0;
+	--accent: #1d5c48;
+	--accent-soft: #e3efe9;
+	--gold: #b8922e;
+	color-scheme: light dark;
+}
+
+@media (prefers-color-scheme: dark) {
+	:root {
+		--bg: #14171a;
+		--surface: #1d2226;
+		--text: #e8e6e1;
+		--muted: #9aa39e;
+		--border: #2f363b;
+		--accent: #6fc1a2;
+		--accent-soft: #223a31;
+		--gold: #d9b65a;
+	}
+}
+
+* {
+	box-sizing: border-box;
+}
+
+body {
+	margin: 0;
+	font-family:
+		system-ui,
+		-apple-system,
+		'Segoe UI',
+		sans-serif;
+	background: var(--bg);
+	color: var(--text);
+	line-height: 1.5;
+}
+
+a {
+	color: var(--accent);
+}
+
+button,
+input,
+select {
+	font: inherit;
+	color: inherit;
+}
+
+button {
+	cursor: pointer;
+}
+
+:focus-visible {
+	outline: 2px solid var(--accent);
+	outline-offset: 2px;
+}
+
+.arabic {
+	font-family: 'Amiri Quran', 'Amiri', serif;
+	direction: rtl;
+	text-align: right;
+	unicode-bidi: embed;
+}
+
+.btn {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.4rem;
+	padding: 0.5rem 1rem;
+	border: 1px solid var(--border);
+	border-radius: 999px;
+	background: var(--surface);
+}
+
+.btn.primary {
+	background: var(--accent);
+	border-color: var(--accent);
+	color: var(--bg);
+}
+
+.btn:disabled {
+	opacity: 0.5;
+	cursor: default;
+}
+
+.btn.icon {
+	padding: 0.5rem 0.75rem;
+}
+
+#ayah_markers {
+	pointer-events: none;
+}

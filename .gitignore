@@ -21,3 +21,11 @@ Thumbs.db
 # Vite
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+
+hafs-kfqc-json.zip
+hafs-kfqc-svg-br.zip
+hafs-kfqc-svg.zip
+hafs-kfqc-svg/
+
+static/data
+static/hafs-svg/svg
