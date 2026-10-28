@@ -37,7 +37,7 @@
 	);
 
 	const PAGE_COUNT = 604;
-	let pages: string[] = $state(new Array(PAGE_COUNT + 1));
+	let pages: string[] = $state(new Array(PAGE_COUNT));
 	let pageElements: HTMLDivElement[] = $state([]);
 	let pageIndexInView: number = $state(untrack(() => pageNumber));
 
@@ -79,6 +79,7 @@
 
 	$effect(() => {
 		let index = pageIndexInView;
+		goto(resolve(`/quran?page=${index + 1}`), { persistState: true, shallow: true });
 		untrack(() => {
 			fetchAround(index);
 		});
@@ -88,7 +89,6 @@
 		fetchAndAssignPage(pageIndex);
 		fetchAhead(pageIndex);
 		loading = false;
-		// goto(resolve(`/quran?page=${pageIndexInView + 1}`), { persistState: true, shallow: true });
 		return;
 	}
 
