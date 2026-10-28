@@ -29,7 +29,7 @@
 </script>
 
 <script lang="ts">
-	let { svgContent }: { svgContent: string } = $props();
+	let { svgContent, applyResizing }: { svgContent: string; applyResizing: boolean } = $props();
 
 	let container: HTMLDivElement;
 
@@ -39,7 +39,7 @@
 		if (!container) return;
 		const svgElement = container.querySelector('svg');
 		if (!svgElement) return;
-		resizeSVG(svgElement);
+		if (applyResizing) resizeSVG(svgElement);
 
 		const pathElements = svgElement.querySelectorAll<SVGPathElement>('.ayahPolygon');
 		const parsedPathElements = Array.from(pathElements).map(parseSVGPathElement);
