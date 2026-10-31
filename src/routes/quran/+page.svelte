@@ -1,6 +1,3 @@
-<script lang="ts" module>
-</script>
-
 <script lang="ts">
 	import QuranPage from '#lib/components/QuranPage.svelte';
 	import { goto } from '$app/navigation';
@@ -25,16 +22,24 @@
 		return svgContent;
 	}
 
-	let pageNumber = $state(
+	let pageNumber = $derived.by(() => {
+		const pageParam = page.url.searchParams.get('page') ?? '0';
+		const pageNumber = Number(pageParam);
+		if (isNaN(pageNumber)) {
+			return 0;
+		}
+		return pageNumber - 1;
+	});
+
+	$effect(() => {
+		let pageIndex = pageNumber;
 		untrack(() => {
-			const pageParam = page.url.searchParams.get('page') ?? '0';
-			const pageNumber = Number(pageParam);
-			if (isNaN(pageNumber)) {
-				return 0;
+		    console.log(pageIndex, pageIndexInView);
+			if (pageIndex != pageIndexInView) {
+				pageElements[pageIndex]?.scrollIntoView({ behavior: 'instant' });
 			}
-			return pageNumber - 1;
-		})
-	);
+		});
+	});
 
 	const PAGE_COUNT = 604;
 	let pages: string[] = $state(new Array(PAGE_COUNT));
@@ -79,11 +84,12 @@
 
 	$effect(() => {
 		let index = pageIndexInView;
-		goto(resolve(`/quran?page=${index + 1}`), { persistState: true, shallow: true });
+		goto(resolve(`/quran?page=${index + 1}`), { persistState: true });
 		untrack(() => {
 			fetchAround(index);
 		});
 	});
+
 	async function fetchAround(pageIndex: number) {
 		loading = true;
 		fetchAndAssignPage(pageIndex);
@@ -131,16 +137,6 @@
 		</div>
 	{/each}
 </div>
-
-<!-- {#if svgContent}
-	<QuranPage {svgContent}></QuranPage>
-{:else if error}
-	<div>{error}</div>
-{:else if loading}
-	<div>Loading</div>
-{:else}
-	<div>check logic</div>
-{/if} -->
 
 <style>
 	.container {

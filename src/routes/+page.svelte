@@ -9,4 +9,3 @@
 	<title>Quran</title>
 </svelte:head>
 
-<Quran surahs={data.surahs}></Quran>

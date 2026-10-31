@@ -14,3 +14,11 @@ export type Reciter = {
 	name: string;
 	folder: string;
 };
+
+export type SurahIndex = {
+	number: number;
+	nameArabic: string;
+    ayahCount: number;
+    juzNumber: number;
+    pageNumber: number
+};

@@ -1,84 +1,81 @@
 <script lang="ts">
+	import type { SurahIndex } from '#lib/quran/types.ts';
 	import { resolve } from '$app/paths';
-	import { revelationLabel } from '#lib/quran/format.js';
-	import type { PageProps } from '../../routes/$types';
 
-	let { data }: PageProps = $props();
+	let { surahs }: { surahs: SurahIndex[] } = $props();
 
 	let query = $state('');
 
 	const filtered = $derived.by(() => {
 		const q = query.trim().toLowerCase();
-		if (!q) return data.surahs;
-		return data.surahs.filter(
-			(s) =>
-				String(s.number) === q ||
-				s.name.toLowerCase().includes(q) ||
-				s.meaning.toLowerCase().includes(q) ||
-				s.arabicName.includes(query.trim())
-		);
+		if (!q) return surahs;
+		return surahs.filter((s) => String(s.number) === q || s.nameArabic.includes(query.trim()));
 	});
 </script>
-<h1>Surahs</h1>
 
-<input
-	class="search"
-	type="search"
-	placeholder="Search by name, meaning or number"
-	bind:value={query}
-	aria-label="Search surahs"
-/>
-
-<ol class="surah-list">
-	{#each filtered as surah (surah.number)}
-		<li>
-			<a href={resolve('/surah/[number]', { number: String(surah.number) })}>
-				<span class="number">{surah.number}</span>
-				<span class="names">
-					<strong>{surah.name}</strong>
-					<span class="muted"
-						>{surah.meaning} · {revelationLabel(surah.revelation)} · {surah.verses.length} verses</span
-					>
-				</span>
-				<span class="arabic name-ar">{surah.arabicName}</span>
-			</a>
-		</li>
-	{:else}
-		<li class="muted empty">No surah matches "{query}".</li>
-	{/each}
-</ol>
+<div class="container">
+	<input
+		class="search"
+		type="search"
+		placeholder="Search by name, meaning or number"
+		bind:value={query}
+		aria-label="Search surahs"
+	/>
+	<ol class="surah-list">
+		{#each filtered as surah (surah.number)}
+			<li>
+				<a
+					style="direction:rtl;"
+					href={resolve(`/quran?page=${surah.pageNumber}`)}
+				>
+					<span class="arabic name-ar">{surah.nameArabic}</span>
+				</a>
+			</li>
+		{:else}
+			<li class="muted empty">No surah matches "{query}".</li>
+		{/each}
+	</ol>
+</div>
 
 <style>
-	h1 {
-		font-size: 1.6rem;
-		margin: 0.5rem 0 1rem;
-	}
+    .container {
+        position: absolute;
+        display: grid;
+        grid-template-rows: auto 1fr;
+        width: 100%;
+        max-height: 100dvh;
+        overflow: scroll;
+        z-index: 2;
+        height: 100%;
+        background-color: var(--border);
+        background: var(--surface);
+    }
 
 	.search {
 		width: 100%;
 		padding: 0.7rem 1rem;
 		border: 1px solid var(--border);
-		border-radius: 12px;
+		border-width: 0 0 1px 0px;
 		background: var(--surface);
-		margin-bottom: 1rem;
+		outline: none;
+		direction: rtl;
 	}
 
 	.surah-list {
 		list-style: none;
 		margin: 0;
 		padding: 0;
-		display: grid;
-		gap: 0.5rem;
+		gap: 1px;
+		overflow: scroll;
 	}
 
 	.surah-list a {
 		display: flex;
 		align-items: center;
-		gap: 1rem;
 		padding: 0.8rem 1rem;
 		background: var(--surface);
-		border: 1px solid var(--border);
-		border-radius: 12px;
+		/*border: 1px solid var(--border);*/
+		border: none;
 		text-decoration: none;
 		color: var(--text);
 	}
@@ -110,6 +107,7 @@
 	.name-ar {
 		font-size: 1.4rem;
 		color: var(--gold);
+		direction: rtl;
 	}
 
 	.muted {

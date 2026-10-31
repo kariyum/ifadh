@@ -6,6 +6,9 @@
 	import { page } from '$app/state';
 	import { player } from '#lib/quran/player.svelte.js';
 	import type { LayoutProps } from './$types';
+	import SurahsMenu from '#lib/components/SurahsMenu.svelte';
+	import { goto } from '$app/navigation';
+	import { Menu } from '@lucide/svelte';
 
 	let { data, children }: LayoutProps = $props();
 
@@ -20,19 +23,31 @@
 	<meta name="theme-color" content="#1d5c48" />
 </svelte:head>
 
-<!-- <header class="topbar">
-	<a class="brand" href={resolve('/')}>
+<header class="topbar">
+	<div class="brand">
 		<span class="arabic">القرآن</span>
-	</a>
+	</div>
 	<nav>
-		<a href={resolve('/')} aria-current={page.url.pathname === '/' ? 'page' : undefined}>Surahs</a>
 		<a
 			href={resolve('/settings')}
 			aria-current={page.url.pathname === '/settings' ? 'page' : undefined}>Settings</a
 		>
+		<button
+			class="menu-btn"
+			onclick={() => {
+				goto('', {
+					state: { showSurahPicker: true },
+					shallow: true
+				});
+			}}><Menu size="24" /></button
+		>
 	</nav>
 </header>
- -->
+
+<div class="surah-menu" style:--show={page.state.showSurahPicker ? 'block' : 'none'}>
+	<SurahsMenu surahs={data.surahs}></SurahsMenu>
+</div>
+
 <main>
 	{@render children()}
 </main>
@@ -65,11 +80,21 @@
 {/if}
 
 <style>
+	.surah-menu {
+		--show: 'none';
+		display: var(--show);
+	}
+	.menu-btn {
+		border: unset;
+		background-color: unset;
+		margin: unset;
+		line-height: 0;
+	}
 	.topbar {
 		position: absolute;
 		width: 100%;
 		top: 0;
-		z-index: 10;
+		z-index: 1;
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
@@ -110,7 +135,7 @@
 	main {
 		max-width: 760px;
 		margin: 0 auto;
-		height: 100vh;
+		height: 100dvh;
 		padding: 1.25rem 0.2rem;
 		padding-top: 4rem;
 		overflow-y: hidden;
